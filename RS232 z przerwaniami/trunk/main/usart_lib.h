@@ -17,6 +17,12 @@ void USART_init(uint16_t baud);
 void USART_softsend(uint8_t data);
 uint8_t USART_softread(void);
 
+void USART_WriteHex(uint8_t num);
+void USART_WriteHexShort(uint8_t num);
+void USART_WriteDec8(uint8_t num);
+void USART_WriteDec8Short(uint8_t num);
+void USART_WriteDec16(uint16_t num);
+
 
 
 #endif /* USART_LIB_H_ */

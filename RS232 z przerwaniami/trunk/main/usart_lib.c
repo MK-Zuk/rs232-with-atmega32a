@@ -38,3 +38,74 @@ uint8_t USART_softread(void)
 	/* Get and return received data from buffer */
 	return UDR;
 }
+
+void USART_WriteHex(uint8_t num)
+{
+	uint8_t hi, lo;
+	hi=num & 0xF0;
+	hi=hi >>4;
+	lo=num & 0x0F;
+	USART_softsend('0');
+	USART_softsend('x');
+	if(hi<10)
+	{USART_softsend(hi+'0');
+	}else USART_softsend(hi-10+'A');
+	if(lo<10)
+	{USART_softsend(lo+'0');
+	}else USART_softsend(lo-10+'A');
+}
+
+void USART_WriteHexShort(uint8_t num)
+{
+	uint8_t hi, lo;
+	hi=num & 0xF0;
+	hi=hi >>4;
+	lo=num & 0x0F;
+	USART_softsend('x');
+	if(hi<10)
+	{USART_softsend(hi+'0');
+	}else USART_softsend(hi-10+'A');
+	if(lo<10)
+	{USART_softsend(lo+'0');
+	}else USART_softsend(lo-10+'A');
+}
+
+void USART_WriteDec8(uint8_t num)
+{
+	uint8_t sto,dzies,jedn;
+	jedn = num % 10;
+	num = num/10;
+	dzies = num%10;
+	sto = num/10;
+	USART_softsend(sto+'0');
+	USART_softsend(dzies+'0');
+	USART_softsend(jedn+'0');
+}
+
+void USART_WriteDec8Short(uint8_t num)
+{
+	uint8_t sto,dzies,jedn;
+	jedn = num % 10;
+	num = num/10;
+	dzies = num%10;
+	sto = num/10;
+	if(sto>0) USART_softsend(sto+'0');
+	if(sto!=0 || dzies>0) USART_softsend(dzies+'0');
+	USART_softsend(jedn+'0');
+}
+
+void USART_WriteDec16(uint16_t num)
+{
+	uint16_t temp[5];
+	uint8_t i;
+	for (i=0; i<5;i++)
+	{
+		temp[i] = num % 10;
+		num = num/10;
+	}
+	
+	for (i=0; i<5;i++)
+	{
+		USART_softsend(temp[4-i]+'0');
+	}
+}

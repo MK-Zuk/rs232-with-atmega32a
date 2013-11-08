@@ -24,12 +24,15 @@ int main(void)
     {
         //TODO:: Please write your application code 
 		_delay_ms(500);
-		USART_softsend('0'+data);
+		USART_WriteHexShort(data);
+		USART_softsend(' ');
+		USART_WriteDec8Short(data);
+		USART_softsend(' ');
 		data++;
-		if(data>9) 
+		if(data>111) 
 		{
 			data=0;
-			while (USART_softread()=='f');
+			while (!(USART_softread()=='f'));
 		}
 		
 	}
