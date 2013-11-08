@@ -11,7 +11,7 @@
 #include <avr/interrupt.h>
 #include "usart_lib.h"
 
-
+ char tekst[] = {"Jakis tekst startowy "};
 
 
 int main(void)
@@ -19,6 +19,7 @@ int main(void)
     volatile uint8_t data;
 	
 	USART_init(BAUD_8MHZ_9600);
+	USART_WriteStrShort(tekst);
 	
 	while(1)
     {
