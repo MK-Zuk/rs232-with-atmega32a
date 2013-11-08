@@ -29,7 +29,12 @@ int main(void)
 		_delay_ms(500);
 		USART_softsend('0'+data);
 		data++;
-		if(data>9) data=0;
+		if(data>9) 
+		{
+			data=0;
+			while (USART_softread()=='f');
+		}
+		
 	}
 }
 
