@@ -109,3 +109,15 @@ void USART_WriteDec16(uint16_t num)
 		USART_softsend(temp[4-i]+'0');
 	}
 }
+
+void USART_WriteStr(char *string, uint8_t lenght)
+{
+	uint8_t i;
+	for(i=0;i<lenght;i++) USART_softsend(string[i]);
+}
+
+void USART_WriteStrShort(char *string)
+{
+	uint8_t i=0;
+	while(!(string[i]=='\0')) USART_softsend(string[i++]);
+}

@@ -23,6 +23,7 @@ void USART_WriteDec8(uint8_t num);
 void USART_WriteDec8Short(uint8_t num);
 void USART_WriteDec16(uint16_t num);
 
-
+void USART_WriteStr(char *string, uint8_t lenght);
+void USART_WriteStrShort(char *string);
 
 #endif /* USART_LIB_H_ */
