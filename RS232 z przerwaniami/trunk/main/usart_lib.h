@@ -11,7 +11,10 @@
 
 #include <avr/interrupt.h>
 
-#define BAUD_8MHZ_9600 51
+#define BAUD_8MHZ_9600 51	//err 0,2
+#define BAUD_8MHZ_19200 25	//err 0,2
+#define BAUD_8MHZ_38400 12	//err 0,2
+
 
 void USART_init(uint16_t baud);
 void USART_softsend(uint8_t data);
