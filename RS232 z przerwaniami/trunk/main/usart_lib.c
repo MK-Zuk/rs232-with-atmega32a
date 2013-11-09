@@ -21,8 +21,9 @@ void USART_initInt(uint16_t baud)
 	/* Set frame format: 8data, 2stop bit */
 	//UCSRC = (1<<URSEL)|(1<<USBS)|(3<<UCSZ0);
 	UCSRC = _BV(URSEL) | _BV(UCSZ0) | _BV(UCSZ1);
+	UCSRB |= _BV(RXCIE);
 	#define _SEND_INT_
-	//#define _REC_INT_
+	#define _REC_INT_
 }
 
 #ifdef _SEND_INT_
@@ -44,7 +45,8 @@ ISR(USART_TXC_vect)
 #ifdef _REC_INT_
 ISR(USART_RXC_vect)
 {
-	
+	USART_flag |= _BV(RECEIVE);
+	buffer[0] = UDR;
 }
 #endif // _REC_INT_
 
@@ -69,12 +71,17 @@ void USART_sendInt(uint8_t *buff)
 		for (num=0; num<BUFFER_SIZE; num++)	buffer[num] = buff[num];
 		
 		num = 0;
-		UDR=buff[num];
+		UDR=buff[num++];
 		USART_flag |= _BV(SEND);
 		UCSRB |= _BV(TXCIE);
 	}
 }
 
+uint8_t USART_readInt(void)
+{
+	USART_flag = 0;
+	return buffer[0];
+}
 
 void USART_softsend(uint8_t data)
 {
@@ -176,3 +183,4 @@ void USART_WriteStrShort(char *string)
 	uint8_t i=0;
 	while(!(string[i]=='\0')) USART_softsend(string[i++]);
 }
+

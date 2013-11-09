@@ -26,6 +26,7 @@ void USART_initInt(uint16_t baud);
 void USART_softsend(uint8_t data);
 void USART_sendInt(uint8_t *buff);
 uint8_t USART_softread(void);
+uint8_t USART_readInt(void);
 
 void USART_WriteHex(uint8_t num);
 void USART_WriteHexShort(uint8_t num);
