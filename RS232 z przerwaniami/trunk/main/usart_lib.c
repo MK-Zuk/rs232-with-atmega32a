@@ -8,6 +8,46 @@
 
 #include "usart_lib.h"
 
+volatile static uint8_t buffer[BUFFER_SIZE];
+volatile uint8_t num;
+
+void USART_initInt(uint16_t baud)
+{
+	/* Set baud rate */
+	UBRRH = (unsigned char)(baud>>8);
+	UBRRL = (unsigned char)baud;
+	/* Enable receiver and transmitter */
+	UCSRB = _BV(RXEN)| _BV(TXEN);
+	/* Set frame format: 8data, 2stop bit */
+	//UCSRC = (1<<URSEL)|(1<<USBS)|(3<<UCSZ0);
+	UCSRC = _BV(URSEL) | _BV(UCSZ0) | _BV(UCSZ1);
+	#define _SEND_INT_
+	//#define _REC_INT_
+}
+
+#ifdef _SEND_INT_
+
+ISR(USART_TXC_vect)
+{
+	if (num < BUFFER_SIZE)
+	{
+		UDR = buffer[num++];
+	}else
+	{
+		UCSRB &= ~_BV(TXCIE);
+		USART_flag = 0;
+	}
+	
+}
+#endif // _SEND_INT_
+
+#ifdef _REC_INT_
+ISR(USART_RXC_vect)
+{
+	
+}
+#endif // _REC_INT_
+
 
 void USART_init(uint16_t baud)
 {
@@ -20,6 +60,21 @@ void USART_init(uint16_t baud)
 	//UCSRC = (1<<URSEL)|(1<<USBS)|(3<<UCSZ0);
 	UCSRC = _BV(URSEL) | _BV(UCSZ0) | _BV(UCSZ1);
 }
+
+void USART_sendInt(uint8_t *buff)
+{
+	if (!USART_flag)	//brak aktywnej transmisji z przerwaniami
+	{
+		
+		for (num=0; num<BUFFER_SIZE; num++)	buffer[num] = buff[num];
+		
+		num = 0;
+		UDR=buff[num];
+		USART_flag |= _BV(SEND);
+		UCSRB |= _BV(TXCIE);
+	}
+}
+
 
 void USART_softsend(uint8_t data)
 {

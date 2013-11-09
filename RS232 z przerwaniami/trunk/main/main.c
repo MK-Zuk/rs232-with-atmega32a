@@ -16,25 +16,25 @@
 
 int main(void)
 {
-    volatile uint8_t data;
+    volatile uint8_t data=0;
+	uint8_t bufor[BUFFER_SIZE];
 	
-	USART_init(BAUD_8MHZ_9600);
+	USART_initInt(BAUD_8MHZ_9600);
 	USART_WriteStrShort(tekst);
-	
+	sei();
 	while(1)
     {
         //TODO:: Please write your application code 
 		_delay_ms(500);
-		USART_WriteHexShort(data);
-		USART_softsend(' ');
-		USART_WriteDec8Short(data);
-		USART_softsend(' ');
-		data++;
-		if(data>111) 
-		{
-			data=0;
-			while (!(USART_softread()=='f'));
-		}
+		bufor[0]=0x0A;
+		bufor[1]=0x00;
+		bufor[2]=data;
+		bufor[3]=0x00;
+		bufor[4]=data++;
+		bufor[5]=0x0A;
+		USART_sendInt(bufor);
+		
+		
 		
 	}
 }
